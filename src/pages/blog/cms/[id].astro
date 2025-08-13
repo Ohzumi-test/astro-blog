@@ -1,0 +1,20 @@
+---
+import { getMicroCMSPost, getMicroCMSPosts } from '@/lib/microcms';
+import MicroCMSPost from '@/layouts/MicroCMSPost.astro';
+
+export async function getStaticPaths() {
+  const posts = await getMicroCMSPosts();
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+---
+
+<MicroCMSPost post={post} />

@@ -3,14 +3,10 @@ import BaseHead from '@/components/BaseHead.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import {SITE_TITLE, SITE_DESCRIPTION} from '@/consts';
-import {getCollection} from 'astro:content';
-import PostCard from "@/components/PostCard.astro";
+import { getAllPosts } from '@/lib/posts';
+import UnifiedPostCard from "@/components/UnifiedPostCard.astro";
 
-const posts = (await getCollection('blog'))
-    .filter(post => !post.data.notCompleted)
-    .sort(
-        (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-    );
+const posts = await getAllPosts();
 ---
 
 <!doctype html>
@@ -24,7 +20,7 @@ const posts = (await getCollection('blog'))
     <section>
         {
             posts.map((post) => (
-                    <PostCard {...post.data} slug={post.slug}/>
+                    <UnifiedPostCard {...post}/>
             ))
         }
     </section>
