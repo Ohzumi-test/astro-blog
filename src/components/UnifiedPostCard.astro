@@ -60,7 +60,7 @@ const postUrl = source === 'microcms' ? `/blog/cms/${slug.replace('microcms-', '
             {pubDate.toLocaleDateString()}
         </p>
         <span class={`source-badge ${source}`}>
-            CMS
+            {source === 'microcms' ? 'CMS' : 'MD'}
         </span>
     </div>
 </Card>
@@ -141,6 +141,11 @@ const postUrl = source === 'microcms' ? `/blog/cms/${slug.replace('microcms-', '
         border-radius: 0.25rem;
         font-weight: bold;
         text-transform: uppercase;
+
+        &.markdown {
+            background-color: colors.$color-primary-100;
+            color: colors.$color-primary-700;
+        }
 
         &.microcms {
             background-color: colors.$color-slate-200;
