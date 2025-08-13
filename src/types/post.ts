@@ -1,4 +1,3 @@
-import type { CollectionEntry } from 'astro:content';
 import type { MicroCMSPost } from '@/lib/microcms';
 
 // カテゴリの型定義
@@ -27,38 +26,8 @@ export interface UnifiedPost {
   tags?: Tag[];
   pinned?: boolean;
   notCompleted?: boolean;
-  source: 'markdown' | 'microcms';
-  content?: string; // microCMSの場合のみ
-}
-
-// マークダウン記事をUnifiedPostに変換
-export function markdownToUnifiedPost(post: CollectionEntry<'blog'>): UnifiedPost {
-  // マークダウンのカテゴリとタグを変換
-  const category = post.data.category ? {
-    id: post.data.category,
-    name: post.data.category,
-    slug: post.data.category.toLowerCase().replace(/\s+/g, '-')
-  } : undefined;
-
-  const tags = post.data.tags?.map(tag => ({
-    id: tag,
-    name: tag,
-    slug: tag.toLowerCase().replace(/\s+/g, '-')
-  })) || [];
-
-  return {
-    id: post.slug,
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description,
-    pubDate: post.data.pubDate,
-    heroImage: post.data.heroImage,
-    category,
-    tags,
-    pinned: post.data.pinned,
-    notCompleted: post.data.notCompleted,
-    source: 'markdown',
-  };
+  source: 'microcms';
+  content?: string;
 }
 
 // microCMS記事をUnifiedPostに変換
