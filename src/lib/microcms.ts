@@ -1,7 +1,10 @@
 import { createClient } from 'microcms-js-sdk';
 
 // microCMSクライアントの設定
-export const client = import.meta.env.MICROCMS_SERVICE_DOMAIN && import.meta.env.MICROCMS_API_KEY 
+export const client = import.meta.env.MICROCMS_SERVICE_DOMAIN && 
+  import.meta.env.MICROCMS_API_KEY && 
+  import.meta.env.MICROCMS_SERVICE_DOMAIN.trim() !== '' && 
+  import.meta.env.MICROCMS_API_KEY.trim() !== ''
   ? createClient({
       serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN,
       apiKey: import.meta.env.MICROCMS_API_KEY,
@@ -37,7 +40,7 @@ export interface MicroCMSPost {
 // microCMSから記事を取得する関数
 export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
   try {
-    if (!client || !import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
+    if (!client) {
       console.warn('microCMS credentials not found. Skipping microCMS posts.');
       return [];
     }
@@ -60,7 +63,7 @@ export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
 // 単一の記事を取得する関数
 export async function getMicroCMSPost(id: string): Promise<MicroCMSPost | null> {
   try {
-    if (!client || !import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
+    if (!client) {
       return null;
     }
 
