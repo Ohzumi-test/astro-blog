@@ -1,10 +1,12 @@
 import { createClient } from 'microcms-js-sdk';
 
 // microCMSクライアントの設定
-export const client = createClient({
-  serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN || '',
-  apiKey: import.meta.env.MICROCMS_API_KEY || '',
-});
+export const client = import.meta.env.MICROCMS_SERVICE_DOMAIN && import.meta.env.MICROCMS_API_KEY 
+  ? createClient({
+      serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN,
+      apiKey: import.meta.env.MICROCMS_API_KEY,
+    })
+  : null;
 
 // microCMSの記事の型定義
 export interface MicroCMSPost {
@@ -35,12 +37,12 @@ export interface MicroCMSPost {
 // microCMSから記事を取得する関数
 export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
   try {
-    if (!import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
+    if (!client || !import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
       console.warn('microCMS credentials not found. Skipping microCMS posts.');
       return [];
     }
 
-    const response = await client.get({
+    const response = await client!.get({
       endpoint: 'posts',
       queries: {
         limit: 100,
@@ -58,11 +60,11 @@ export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
 // 単一の記事を取得する関数
 export async function getMicroCMSPost(id: string): Promise<MicroCMSPost | null> {
   try {
-    if (!import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
+    if (!client || !import.meta.env.MICROCMS_SERVICE_DOMAIN || !import.meta.env.MICROCMS_API_KEY) {
       return null;
     }
 
-    const post = await client.get({
+    const post = await client!.get({
       endpoint: 'posts',
       contentId: id,
     });
