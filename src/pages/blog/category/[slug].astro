@@ -1,0 +1,70 @@
+---
+import BaseHead from '@/components/BaseHead.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Card from '@/components/Card.astro';
+import {SITE_TITLE, SITE_DESCRIPTION, GLOBAL_STYLE} from '@/consts';
+import { getPostsByCategory, getAllCategories } from '@/lib/posts';
+import UnifiedPostCard from "@/components/UnifiedPostCard.astro";
+
+export async function getStaticPaths() {
+  const categories = await getAllCategories();
+  return categories.map((category) => ({
+    params: { slug: category.slug },
+    props: { category },
+  }));
+}
+
+interface Props {
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
+const { category } = Astro.props;
+const posts = await getPostsByCategory(category.slug);
+---
+
+<!doctype html>
+<html lang="ja">
+<head>
+    <BaseHead title={`${category.name} - ${SITE_TITLE}`} description={`${category.name}カテゴリの記事一覧`}/>
+</head>
+<body>
+<Header/>
+<main>
+    <Card variant={GLOBAL_STYLE}>
+        <h1 class="emphasize">カテゴリ: {category.name}</h1>
+        <p>{posts.length}件の記事があります</p>
+    </Card>
+    <section>
+        {
+            posts.map((post) => (
+                    <UnifiedPostCard {...post}/>
+            ))
+        }
+    </section>
+</main>
+<Footer/>
+</body>
+</html>
+
+<style>
+    main {
+        max-width: 90rem;
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    main > * {
+        margin-bottom: 2rem;
+    }
+
+    section {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+</style>

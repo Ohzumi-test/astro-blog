@@ -18,6 +18,16 @@ export interface MicroCMSPost {
     url: string;
     alt?: string;
   };
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  tags?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+  }>;
   pinned?: boolean;
   notCompleted?: boolean;
 }

@@ -3,6 +3,8 @@ title: '恋文 Astro Blog ドキュメント'
 description: 'Koibumi Astro Blog の使い方を紹介します（日本語版）'
 pubDate: 'Mar 28 2023'
 heroImage: 'https://imagedelivery.net/6gszw1iux5BH0bnwjXECTQ/844801b2-f3f6-4c4b-7a59-437f9a0af000/small'
+category: 'ドキュメント'
+tags: ['Astro', 'ブログ', 'チュートリアル']
 pinned: true
 ---
 
