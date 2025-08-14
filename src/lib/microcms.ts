@@ -1,10 +1,20 @@
 import { createClient } from 'microcms-js-sdk';
 
+// 環境変数の検証
+const serviceDomain = import.meta.env.MICROCMS_SERVICE_DOMAIN;
+const apiKey = import.meta.env.MICROCMS_API_KEY;
+
+// microCMSが設定されているかチェック
+const isMicroCMSConfigured = serviceDomain && 
+  apiKey && 
+  serviceDomain !== 'your-service-domain' && 
+  apiKey !== 'your-api-key';
+
 // microCMSクライアントの設定
-export const client = createClient({
-  serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN || 'your-service-domain',
-  apiKey: import.meta.env.MICROCMS_API_KEY || 'your-api-key',
-});
+export const client = isMicroCMSConfigured ? createClient({
+  serviceDomain: serviceDomain,
+  apiKey: apiKey,
+}) : null;
 
 // microCMSの記事の型定義
 export interface MicroCMSPost {
@@ -52,6 +62,12 @@ export interface MicroCMSTag {
 
 // microCMSから記事を取得する関数
 export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
+  // microCMSが設定されていない場合は空配列を返す
+  if (!client) {
+    console.log('microCMS is not configured. Skipping microCMS posts fetch.');
+    return [];
+  }
+
   try {
     const response = await client.get({
       endpoint: 'posts',
@@ -70,6 +86,12 @@ export async function getMicroCMSPosts(): Promise<MicroCMSPost[]> {
 
 // 単一の記事を取得する関数
 export async function getMicroCMSPost(id: string): Promise<MicroCMSPost | null> {
+  // microCMSが設定されていない場合はnullを返す
+  if (!client) {
+    console.log('microCMS is not configured. Cannot fetch microCMS post.');
+    return null;
+  }
+
   try {
     const post = await client.get({
       endpoint: 'posts',
@@ -85,6 +107,12 @@ export async function getMicroCMSPost(id: string): Promise<MicroCMSPost | null> 
 
 // microCMSからカテゴリを取得する関数
 export async function getMicroCMSCategories(): Promise<MicroCMSCategory[]> {
+  // microCMSが設定されていない場合は空配列を返す
+  if (!client) {
+    console.log('microCMS is not configured. Skipping microCMS categories fetch.');
+    return [];
+  }
+
   try {
     const response = await client.get({
       endpoint: 'categories',
@@ -103,6 +131,12 @@ export async function getMicroCMSCategories(): Promise<MicroCMSCategory[]> {
 
 // microCMSからタグを取得する関数
 export async function getMicroCMSTags(): Promise<MicroCMSTag[]> {
+  // microCMSが設定されていない場合は空配列を返す
+  if (!client) {
+    console.log('microCMS is not configured. Skipping microCMS tags fetch.');
+    return [];
+  }
+
   try {
     const response = await client.get({
       endpoint: 'tags',
