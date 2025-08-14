@@ -2,6 +2,10 @@ import { getCollection } from 'astro:content';
 import { getMicroCMSPosts, getMicroCMSCategories, getMicroCMSTags } from '@/lib/microcms';
 import { markdownToUnifiedPost, microCMSToUnifiedPost, type UnifiedPost } from '@/types/post';
 import type { Category, Tag } from '@/types/post';
+import { paginate, type PaginationOptions, type PaginatedResult } from '@/lib/pagination';
+
+// 1ページあたりの記事数
+export const POSTS_PER_PAGE = 6;
 
 // 全ての記事を取得して統合する関数
 export async function getAllPosts(): Promise<UnifiedPost[]> {
@@ -28,10 +32,25 @@ export async function getAllPosts(): Promise<UnifiedPost[]> {
     .sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
 }
 
+// ページネーション付きで全ての記事を取得
+export async function getAllPostsPaginated(options: PaginationOptions): Promise<PaginatedResult<UnifiedPost>> {
+  const allPosts = await getAllPosts();
+  return paginate(allPosts, options);
+}
+
 // カテゴリ別の記事を取得
 export async function getPostsByCategory(categorySlug: string): Promise<UnifiedPost[]> {
   const allPosts = await getAllPosts();
   return allPosts.filter(post => post.category?.slug === categorySlug);
+}
+
+// ページネーション付きでカテゴリ別の記事を取得
+export async function getPostsByCategoryPaginated(
+  categorySlug: string, 
+  options: PaginationOptions
+): Promise<PaginatedResult<UnifiedPost>> {
+  const posts = await getPostsByCategory(categorySlug);
+  return paginate(posts, options);
 }
 
 // タグ別の記事を取得
@@ -40,6 +59,15 @@ export async function getPostsByTag(tagSlug: string): Promise<UnifiedPost[]> {
   return allPosts.filter(post => 
     post.tags?.some(tag => tag.slug === tagSlug)
   );
+}
+
+// ページネーション付きでタグ別の記事を取得
+export async function getPostsByTagPaginated(
+  tagSlug: string, 
+  options: PaginationOptions
+): Promise<PaginatedResult<UnifiedPost>> {
+  const posts = await getPostsByTag(tagSlug);
+  return paginate(posts, options);
 }
 
 // 全てのカテゴリを取得

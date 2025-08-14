@@ -1,0 +1,157 @@
+---
+import { generatePageNumbers } from '@/lib/pagination';
+import '@/styles/components.scss';
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+const pageNumbers = generatePageNumbers(currentPage, totalPages);
+
+function getPageUrl(page: number): string {
+  if (page === 1) {
+    return baseUrl;
+  }
+  return `${baseUrl}/${page}`;
+}
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="ページネーション">
+    <div class="pagination-container">
+      {currentPage > 1 && (
+        <a href={getPageUrl(currentPage - 1)} class="pagination-btn pagination-prev">
+          ← 前へ
+        </a>
+      )}
+      
+      <div class="pagination-numbers">
+        {pageNumbers.map((pageNum) => (
+          pageNum === '...' ? (
+            <span class="pagination-ellipsis">...</span>
+          ) : (
+            <a 
+              href={getPageUrl(pageNum as number)}
+              class={`pagination-number ${pageNum === currentPage ? 'active' : ''}`}
+              aria-current={pageNum === currentPage ? 'page' : undefined}
+            >
+              {pageNum}
+            </a>
+          )
+        ))}
+      </div>
+      
+      {currentPage < totalPages && (
+        <a href={getPageUrl(currentPage + 1)} class="pagination-btn pagination-next">
+          次へ →
+        </a>
+      )}
+    </div>
+    
+    <div class="pagination-info">
+      ページ {currentPage} / {totalPages}
+    </div>
+  </nav>
+)}
+
+<style lang="scss">
+  @use "../styles/colors.scss";
+
+  .pagination {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .pagination-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination-btn {
+    padding: 0.5rem 1rem;
+    background-color: colors.$color-primary-100;
+    color: colors.$color-primary-700;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid colors.$color-primary-200;
+
+    &:hover {
+      background-color: colors.$color-primary-200;
+      transform: translateY(-1px);
+    }
+  }
+
+  .pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .pagination-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: colors.$color-slate-600;
+    border: 1px solid transparent;
+
+    &:hover {
+      background-color: colors.$color-primary-100;
+      color: colors.$color-primary-700;
+      border-color: colors.$color-primary-200;
+    }
+
+    &.active {
+      background-color: colors.$color-primary-500;
+      color: white;
+      border-color: colors.$color-primary-600;
+    }
+  }
+
+  .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: colors.$color-slate-400;
+    font-weight: bold;
+  }
+
+  .pagination-info {
+    font-size: 0.875rem;
+    color: colors.$color-slate-600;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .pagination-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pagination-btn {
+      order: 2;
+    }
+
+    .pagination-numbers {
+      order: 1;
+    }
+  }
+</style>

@@ -10,10 +10,29 @@ import Pagination from "@/components/Pagination.astro";
 
 export async function getStaticPaths() {
   const categories = await getAllCategories();
-  return categories.map((category) => ({
-    params: { slug: category.slug },
-    props: { category },
-  }));
+  const paths = [];
+  
+  for (const category of categories) {
+    // 各カテゴリの総ページ数を取得
+    const firstPagePosts = await getPostsByCategoryPaginated(category.slug, { 
+      page: 1, 
+      perPage: POSTS_PER_PAGE 
+    });
+    const totalPages = firstPagePosts.totalPages;
+    
+    // 2ページ目以降のパスを生成
+    for (let page = 2; page <= totalPages; page++) {
+      paths.push({
+        params: { 
+          slug: category.slug,
+          page: page.toString()
+        },
+        props: { category, page },
+      });
+    }
+  }
+  
+  return paths;
 }
 
 interface Props {
@@ -22,12 +41,12 @@ interface Props {
     name: string;
     slug: string;
   };
+  page: number;
 }
 
-const { category } = Astro.props;
-const currentPage = 1;
+const { category, page } = Astro.props;
 const paginatedPosts = await getPostsByCategoryPaginated(category.slug, { 
-  page: currentPage, 
+  page, 
   perPage: POSTS_PER_PAGE 
 });
 ---
@@ -35,7 +54,7 @@ const paginatedPosts = await getPostsByCategoryPaginated(category.slug, {
 <!doctype html>
 <html lang="ja">
 <head>
-    <BaseHead title={`${category.name} - ${SITE_TITLE}`} description={`${category.name}カテゴリの記事一覧`}/>
+    <BaseHead title={`${category.name} - ページ ${page} | ${SITE_TITLE}`} description={`${category.name}カテゴリの記事一覧`}/>
 </head>
 <body>
 <Header/>

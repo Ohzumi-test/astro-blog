@@ -7,9 +7,30 @@ import { getAllPostsPaginated, POSTS_PER_PAGE } from '@/lib/posts';
 import UnifiedPostCard from "@/components/UnifiedPostCard.astro";
 import Pagination from "@/components/Pagination.astro";
 
-const currentPage = 1;
+export async function getStaticPaths() {
+  // 全記事数を取得してページ数を計算
+  const firstPagePosts = await getAllPostsPaginated({ page: 1, perPage: POSTS_PER_PAGE });
+  const totalPages = firstPagePosts.totalPages;
+  
+  // 2ページ目以降のパスを生成（1ページ目は /blog で処理）
+  const paths = [];
+  for (let page = 2; page <= totalPages; page++) {
+    paths.push({
+      params: { page: page.toString() },
+      props: { page }
+    });
+  }
+  
+  return paths;
+}
+
+interface Props {
+  page: number;
+}
+
+const { page } = Astro.props;
 const paginatedPosts = await getAllPostsPaginated({ 
-  page: currentPage, 
+  page, 
   perPage: POSTS_PER_PAGE 
 });
 ---
@@ -17,7 +38,7 @@ const paginatedPosts = await getAllPostsPaginated({
 <!doctype html>
 <html lang="en">
 <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
+    <BaseHead title={`ブログ - ページ ${page} | ${SITE_TITLE}`} description={SITE_DESCRIPTION}/>
 </head>
 <body>
 <Header/>
