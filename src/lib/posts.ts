@@ -80,7 +80,7 @@ export async function getAllCategories(): Promise<Category[]> {
         id: cat.id,
         name: cat.name,
         slug: cat.slug
-      }));
+      })).filter(cat => cat.slug && cat.slug.trim() !== '');
     }
   } catch (error) {
     console.error('Failed to fetch categories from microCMS:', error);
@@ -96,7 +96,9 @@ export async function getAllCategories(): Promise<Category[]> {
     }
   });
   
-  return Array.from(categoryMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return Array.from(categoryMap.values())
+    .filter(cat => cat.slug && cat.slug.trim() !== '')
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // 全てのタグを取得
@@ -109,7 +111,7 @@ export async function getAllTags(): Promise<Tag[]> {
         id: tag.id,
         name: tag.name,
         slug: tag.slug
-      }));
+      })).filter(tag => tag.slug && tag.slug.trim() !== '');
     }
   } catch (error) {
     console.error('Failed to fetch tags from microCMS:', error);
@@ -125,7 +127,9 @@ export async function getAllTags(): Promise<Tag[]> {
     });
   });
   
-  return Array.from(tagMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return Array.from(tagMap.values())
+    .filter(tag => tag.slug && tag.slug.trim() !== '')
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // ピン留めされた記事のみを取得
