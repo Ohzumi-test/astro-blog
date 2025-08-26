@@ -1,0 +1,130 @@
+---
+---
+
+<div id="search-container">
+  <div id="search"></div>
+</div>
+
+<script>
+  import { PagefindUI } from "@pagefind/default-ui";
+
+  // ページが読み込まれた後にPagefindを初期化
+  document.addEventListener('DOMContentLoaded', () => {
+    new PagefindUI({ 
+      element: "#search",
+      showSubResults: true,
+      showImages: false,
+      excerptLength: 30,
+      resetStyles: false,
+      translations: {
+        placeholder: "記事を検索...",
+        clear_search: "検索をクリア",
+        load_more: "さらに読み込む",
+        search_label: "このサイトを検索",
+        filters_label: "フィルター",
+        zero_results: "検索結果が見つかりませんでした",
+        many_results: "[SEARCH_TERM] の検索結果 [COUNT] 件",
+        one_result: "[SEARCH_TERM] の検索結果 [COUNT] 件",
+        alt_search: "[SEARCH_TERM] を検索",
+        search_suggestion: "検索してみてください",
+        searching: "検索中..."
+      }
+    });
+  });
+</script>
+
+<style>
+  #search-container {
+    margin: 2rem 0;
+  }
+
+  :global(.pagefind-ui) {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: #c60f6a;
+    --pagefind-ui-text: #1b1b17;
+    --pagefind-ui-background: #f3f3f1;
+    --pagefind-ui-border: #e5e7eb;
+    --pagefind-ui-tag: #f3f4f6;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0.5rem;
+    --pagefind-ui-font: Arial, Helvetica, sans-serif;
+  }
+
+  :global(.pagefind-ui__search-input) {
+    border-radius: 0.75rem !important;
+    border: 2px solid var(--pagefind-ui-border) !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    transition: border-color 0.2s ease !important;
+  }
+
+  :global(.pagefind-ui__search-input:focus) {
+    border-color: var(--pagefind-ui-primary) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(198, 15, 106, 0.1) !important;
+  }
+
+  :global(.pagefind-ui__results) {
+    margin-top: 1rem !important;
+  }
+
+  :global(.pagefind-ui__result) {
+    border: 1px solid var(--pagefind-ui-border) !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+    background: rgba(243, 243, 241, 0.3) !important;
+    backdrop-filter: blur(18px) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  :global(.pagefind-ui__result:hover) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  :global(.pagefind-ui__result-link) {
+    color: var(--pagefind-ui-primary) !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+  }
+
+  :global(.pagefind-ui__result-link:hover) {
+    text-decoration: underline !important;
+  }
+
+  :global(.pagefind-ui__result-excerpt) {
+    margin-top: 0.5rem !important;
+    color: var(--pagefind-ui-text) !important;
+    line-height: 1.5 !important;
+  }
+
+  :global(.pagefind-ui__result-excerpt mark) {
+    background-color: rgba(198, 15, 106, 0.2) !important;
+    color: var(--pagefind-ui-primary) !important;
+    padding: 0.125rem 0.25rem !important;
+    border-radius: 0.25rem !important;
+  }
+
+  :global(.pagefind-ui__button) {
+    background-color: var(--pagefind-ui-primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  :global(.pagefind-ui__button:hover) {
+    background-color: #a50d58 !important;
+  }
+
+  :global(.pagefind-ui__message) {
+    text-align: center !important;
+    color: var(--pagefind-ui-text) !important;
+    font-style: italic !important;
+    margin: 2rem 0 !important;
+  }
+</style>

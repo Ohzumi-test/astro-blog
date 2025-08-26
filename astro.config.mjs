@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import { execSync } from 'child_process';
 
 import solidJs from "@astrojs/solid-js";
 
@@ -33,5 +34,19 @@ export default defineConfig({
     }
   },
   site: 'https://astro.koibumi.art/',
-  integrations: [mdx(), sitemap(), solidJs()]
+  integrations: [
+    mdx(), 
+    sitemap(), 
+    solidJs(),
+    {
+      name: 'pagefind',
+      hooks: {
+        'astro:build:done': () => {
+          execSync('npx pagefind --site dist --glob "**/*.html"', {
+            stdio: 'inherit'
+          });
+        }
+      }
+    }
+  ]
 });

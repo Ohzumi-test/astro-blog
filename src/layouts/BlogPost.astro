@@ -20,12 +20,12 @@ const {title, description, category, tags, pubDate} = Astro.props;
 <body>
 <Header/>
 <main>
-    <Card variant={GLOBAL_STYLE}>
+    <Card variant={GLOBAL_STYLE} data-pagefind-body>
         <article>
             <h1 class="emphasize">
                 {title}
             </h1>
-            <div class="post-meta">
+            <div class="post-meta" data-pagefind-ignore>
                 <p>公開日: {pubDate.toLocaleDateString('ja-JP')}</p>
                 {category && (
                     <div class="category-badge">
